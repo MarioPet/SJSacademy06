@@ -19,15 +19,18 @@ export class App extends React.Component {
       todos: [
         {
           id: 1,
-          todo: "Drink Water"
+          todo: "Drink Water",
+          done: false
         },
         {
           id: 2,
-          todo: "Learn React"
+          todo: "Learn React",
+          done: false
         },
         {
           id: 3,
-          todo: "Walk the dog"
+          todo: "Walk the dog",
+          done: false
         },
       ],
       todoItem: ""
@@ -38,7 +41,7 @@ export class App extends React.Component {
     this.setState(prevState => ({
       days: [
         ...prevState.days, 
-        "Thursday", "Friday", 
+        "Thursday", "Friday"
       ]
     }));
   }
@@ -74,6 +77,17 @@ export class App extends React.Component {
     }));
   }
 
+  MarkTodoAsDone = (todo) => {
+    console.log(todo);
+    this.setState(prevState => ({
+      todos: [
+        ...prevState.todos.map(
+          t => (t.id === todo.id ? { id: t.id, todo: t.todo, done: !t.done } : t )
+        )
+      ]
+    }));
+  }
+
   render() {
     console.log("STATEEEE => ", this.state);
     return (
@@ -93,7 +107,10 @@ export class App extends React.Component {
           /> &nbsp;
           <button onClick={() => this.AddTodo(this.state.todoItem)}>+ ADD TO DO</button>
           <hr />
-          <Todos todolist={this.state.todos} />
+          <Todos 
+            todolist={this.state.todos}
+            markTodoAsDone={this.MarkTodoAsDone}
+          />
         </div>
       </div>
     )
