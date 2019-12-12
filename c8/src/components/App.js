@@ -3,6 +3,7 @@ import axios from "axios";
 import { API_URL } from "../constants";
 import { Users } from './Users';
 import { Route, Switch, Link } from "react-router-dom";
+import { Gallery } from "./Gallery";
 
 export class App extends React.Component {
 
@@ -10,10 +11,12 @@ export class App extends React.Component {
     super(props);
 
     this.state = {
-      posts: []
+      posts: [],
+      photos: [],
+      popupPhoto: ""
     }
 
-    console.log("This comes from the Constructorot");
+    console.log("This comes from the Constructor");
   }
 
   FetchPosts = () => {
@@ -27,9 +30,32 @@ export class App extends React.Component {
       });
   }
 
+  FetchAlbums = () => {
+    axios.get(API_URL + "/photos")
+      .then(res => {
+        this.setState({
+          photos: res.data
+        });
+      }).catch(err => {
+        console.error(err);
+      });
+  }
+
+  OpenPhoto = (photoUrl) => {
+    this.setState({
+      popupPhoto: photoUrl
+    });
+  }
+
+  ClosePhoto = () => {
+    this.setState({
+      popupPhoto: ""
+    });
+  }
+
   componentDidMount() {
     this.FetchPosts();
-    // console.log("Component Did Mount");
+    this.FetchAlbums();
   }
 
   render() {
@@ -44,10 +70,17 @@ export class App extends React.Component {
           </li>
         </ul>
         <Switch>
-          <Route path="/" render={() => {
+          <Route exact path="/" render={() => {
             return <Users postslist={this.state.posts} />
           }} />
-          {/* <Route path="/gallery" component={Gallery} /> */}
+          <Route path="/gallery" render={() => {
+            return <Gallery 
+              OpenPhoto={this.OpenPhoto} 
+              ClosePhoto={this.ClosePhoto} 
+              photoslist={this.state.photos}
+              popupPhoto={this.state.popupPhoto}
+            />
+          }} />
         </Switch>
       </div>
     )
