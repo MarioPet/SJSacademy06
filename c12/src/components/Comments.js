@@ -26,7 +26,7 @@ export class Comments extends React.Component {
                 <tr key={comment.id}>
                   <td>{comment.id}</td>
                   <td>{comment.email}</td>
-                  <td><Link to={"details/" + comment.id}>Edit</Link></td>
+                  <td><Link to={"comments/" + comment.id}>Edit</Link></td>
                 </tr>
               )
               })}
